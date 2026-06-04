@@ -2,7 +2,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 
-# Secrets se tokens lena
+# GitHub Secrets se tokens lena
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
 URL = "https://ssc.gov.in"
@@ -67,6 +67,9 @@ def check_ssc():
             print("Naya notice mila aur message bhej diya gaya.")
         else:
             print("Koi naya notice nahi aaya, sab purana hi hai.")
+
+    except Exception as e:
+        print(f"Error aaya: {e}")
 
 if __name__ == "__main__":
     check_ssc()
