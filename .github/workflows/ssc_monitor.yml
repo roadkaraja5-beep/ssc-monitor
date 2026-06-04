@@ -1,23 +1,40 @@
-name: SSC Monitor
+name: name: SSC Monitor
 
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: "*/30 * * * *"
+
 jobs:
-  test:
+  monitor:
     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+    permissions:
+      contents: write
 
-      - uses: actions/setup-python@v5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - run: pip install -r requirements.txt
+      - name: Install Requirements
+        run: pip install -r requirements.txt
 
       - name: Run Bot
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
         run: python bot.py
+
+      - name: Commit updated file
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add last_notice.txt
+          git diff --staged --quiet || git commit -m "Update notice cache"
+          git push
